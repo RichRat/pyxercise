@@ -3,9 +3,9 @@ import re
 import time
 from copy import deepcopy
 
-from lib.grid_util import grid_coords
-from lib.math_util import reversed_en
-from lib.vector import IntVector2
+from util.grid_util import grid_coords
+from util.math_util import reversed_en
+from util.vector import IntVector2
 
 
 def advent_01():

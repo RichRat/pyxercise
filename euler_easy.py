@@ -5,7 +5,7 @@ import time
 import re
 
 from resources.constants import euler13_big_num_array, euler67_huge_triangle
-from lib.primes import Primes
+from util.primes import Primes
 
 
 def euler01():
