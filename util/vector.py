@@ -23,6 +23,9 @@ class IntVector2:
     def of_grid(self, grid):
         return grid[self.y][self.x]
 
+    def set_grid(self, grid, val):
+        grid[self.y][self.x] = val
+
     def is_in_bounds(self, grid):
         return 0 <= self.y < len(grid) and 0 <= self.x < len(grid[0])
 

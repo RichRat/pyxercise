@@ -13,5 +13,7 @@ def reversed_en(inp: list):
 
 
 
+
+
 # for i, n in reversed_en(['a','b','c']):
 #     print(str(i) + " " + n)
