@@ -3,6 +3,7 @@ import random
 import re
 import time
 
+from util.grid_util import grid_walk, grid_walk_val
 from util.timing import timed_run
 from util.vector import IntVector2
 from matplotlib import pyplot as plt, animation
@@ -39,11 +40,9 @@ def advent_14_step_2():
         bot_list.append((IntVector2(*inp[:2]), IntVector2(*inp[2:4])))
 
 
-    fig = plt.figure()
-    im = plt.imshow([ [ random.choice([0,1]) for m in range(size.x)] for n in range(size.y)], animated=True)
-
     def get_pos_for_time(t):
-        return [ (bot[0] + bot[1] * t) % size for bot in bot_list ]
+        for bot in bot_list:
+            yield (bot[0] + bot[1] * t) % size
 
     def get_display_grid(pos_arr: [IntVector2]):
         ret = [ [ 0 for x in range(size.x )] for y in range(size.y) ]
@@ -52,25 +51,29 @@ def advent_14_step_2():
 
         return ret
 
-    o = {'t':0}
-    def update_anim(*args):
-        #if o['t'] >= 100: return [im]
-        print("displaying second " + str(o['t'] + 1))
-        im.set_array(get_display_grid(get_pos_for_time(o['t'])))
-        o['t'] += 1
-        return [im]
+    check_dirs = [IntVector2(0,1)]
+    def check_bots_for_lines(bot_dict: dict, length):
+        for bot in bot_dict.keys():
+            for d in check_dirs:
+                is_line = True
+                for i in range(1, length + 1):
+                    check_pos = bot + d * i
+                    if check_pos not in bot_dict:
+                        is_line = False
+                        break
 
-    anim = animation.FuncAnimation(fig, update_anim, interval=50, blit=True)
-    plt.show()
+                if is_line:
+                    return True
 
+        return False
 
-
-        #display grid
-        # plt.imshow(display_grid, interpolation="none")
-        # plt.show()
-
-
-
+    for t in range(20000):
+        bd = dict([ (bot, True) for bot in get_pos_for_time(t) ])
+        if check_bots_for_lines(bd, 7):
+            print("time " + str(t))
+            plt.imshow(get_display_grid(get_pos_for_time(t)))
+            plt.show()
+            return
 
 
 timed_run(advent_14_step_2)
