@@ -77,20 +77,19 @@ def advent_15_step_2():
 
     bot_moves = "".join([ line for line in lines if len(line) > 0 and line[0] in dir_dict ])
 
-    def util_move(v_from, v_to, val):
-        v_to.set_grid(grid, val)
-        v_from.set_grid(grid, '.')
-
     def do_move(v_pos: list, v_dir):
         next_pos = [ v + v_dir for v in v_pos ]
         move = True
         push_move = []
-        for i, nex_val in enumerate([ v.of_grid(grid) for v in next_pos]):
-            if nex_val == '#':
+        for i, nex_val in enumerate([ v.of_grid(grid) for v in next_pos ]):
+            if next_pos[i] in push_move:
+                continue
+            elif nex_val == '#':
                 return False
             elif nex_val in '[]':
                 push_move.append(next_pos[i])
-                if v_dir.y != 0 and nex_val != v_pos[i].of_grid(grid):
+                #vertical push also pushes other bracket of box
+                if v_dir.y != 0:
                     push_move.append(next_pos[i] + dir_dict[nex_val])
 
         if move and push_move:
@@ -98,18 +97,22 @@ def advent_15_step_2():
 
         if move:
             for i, np in enumerate(next_pos):
-                util_move(v_pos[i], np, v_pos[i].of_grid(grid))
+                np.set_grid(grid, v_pos[i].of_grid(grid))
+                v_pos[i].set_grid(grid, '.')
 
-        return move
+                return move
 
-    print(len(bot_moves))
     for m in [ m for m in bot_moves ]:
+        # pause marker for debugging
+        if m == 'p':
+            continue
+
         v_direction = dir_dict[m]
         if do_move([bot_pos], v_direction):
             bot_pos += v_direction
 
-        print("Move " + str(m))
-        print("\n".join([ "".join(line) for line in grid ]))
+        # print("Move " + str(m))
+        # print("\n".join([ "".join(line) for line in grid ]))
         print('\n')
 
     result = 0
@@ -117,10 +120,7 @@ def advent_15_step_2():
         if val == '[':
             result += pos.x + pos.y * 100
 
-
     print("result " + str(result))
-
-
 
 
 timed_run(advent_15_step_2)
