@@ -14,24 +14,47 @@ def advent_16_step_1():
     start_dir = 0
 
     results = []
+    min_result = [10**20]
 
 
     def run_maze(pos, dir, trail, score=0):
         if pos.of_grid(maze) == "E":
-            results.append((score, trail))
+            if score < min_result[0]:
+                min_result[0] = score
+                results.append((score, trail))
             return
 
-        for d in [ (i + dir) % len(dirs) for i in range(-1,2) ]:
+        dl = None
+        while True:
+            dl = [ (i + dir) % len(dirs) for i in range(-1,2) ]
+            dl = [ d for d in dl if (pos + dirs[d]).of_grid(maze) != "#" and (pos + dirs[d]).of_grid(maze) not in trail]
+            if len(dl) == 0:
+                return
+            if len(dl) == 1:
+                nex_dir = dirs[dl[0]]
+                nex_val = (pos + dirs[dl[0]]).of_grid(maze)
+                if nex_val == "E":
+                    run_maze(pos, nex_dir, trail, score)
+                else:
+                    score += 1 if dir == nex_dir else 1001
+                    pos = pos + dirs[nex_dir]
+
+            if len(dl) > 1:
+                break
+
+        for d in dl:
             new_dir = dirs[d]
             new_pos = pos + new_dir
             if new_pos.of_grid(maze) != "#" and new_pos not in trail:
-                step_score = 1 if d == 0 else 1001
+                step_score = 1 if d == dir else 1001
                 run_maze(new_pos, d, trail + [new_pos], score + step_score)
 
 
 
-    dir_str = [ '>', 'v', '<', '^']
+
     run_maze(start_pos, start_dir, [start_pos])
+
+    dir_str = ['>', 'v', '<', '^']
     for score, path in results:
         print("score " + str(score))
         s_lines = [ [ c for c in line ] for line in maze ]

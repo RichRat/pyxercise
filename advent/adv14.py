@@ -76,4 +76,4 @@ def advent_14_step_2():
             return
 
 
-timed_run(advent_14_step_2)
+timed_run(advent_14_step_1)

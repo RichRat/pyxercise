@@ -100,7 +100,7 @@ def advent_15_step_2():
                 np.set_grid(grid, v_pos[i].of_grid(grid))
                 v_pos[i].set_grid(grid, '.')
 
-                return move
+            return move
 
     for m in [ m for m in bot_moves ]:
         # pause marker for debugging
@@ -113,7 +113,7 @@ def advent_15_step_2():
 
         # print("Move " + str(m))
         # print("\n".join([ "".join(line) for line in grid ]))
-        print('\n')
+        # print('\n')
 
     result = 0
     for pos, val in grid_walk_val(grid):
