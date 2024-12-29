@@ -52,10 +52,12 @@ class IntVector2:
         gcd = greatest_common_divisor(abs(self.x), abs(self.y))
         return IntVector2(int(self.x / gcd), int(self.y / gcd))
 
+    def to_tuple(self):
+        return self.x, self.y
+
 
 def to_vect_list(tuples: list[(int, int)]):
     return [IntVector2(x, y) for x, y in tuples]
-
 
 null_vector = IntVector2(0,0)
 
