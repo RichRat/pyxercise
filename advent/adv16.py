@@ -1,6 +1,6 @@
 
 
-from util.timing import timed_run
+from util.timing import timed_run, Stopwatch
 from util.vector import IntVector2 as Iv
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 class Node:
     def __init__(self, position: Iv):
         self.position = position
-        self.edges = [None] * 4
+        self.edges = [None] * 4 # type: list[Edge|None]
         self.min_score = 10 ** 50
         self.min_score_from = -1
         self.is_finish = False
@@ -17,13 +17,37 @@ class Node:
     def score_edges(self):
         for i, e in enumerate(self.edges):
             if e is not None and i != self.min_score_from:
-                angle_cost = 1000 if abs(self.min_score_from - i) % 2 == 1 else 0
-                e.get_node(self).set_score(angle_cost + e.cost + self.min_score, e)
+                #  1000 if abs(self.min_score_from - i) % 2 == 1 else 0
+                e.get_node(self).set_score(self.angle_score(i) + e.cost + self.min_score, e)
 
+    # TODO keep track of path for part two and maybe even of identical paths so set a case for score == self.score
     def set_score(self, score, edge):
         if score < self.min_score:
             self.min_score = score
             self.min_score_from = self.edges.index(edge)
+        elif score == self.min_score:
+            print("hot damn!")
+
+    def backtrace_edges(self, from_edge):
+        out = []
+        min_score = 19000
+        from_dir = self.edges.index(from_edge)
+        for i, e in enumerate(self.edges):
+            if e is not None and e != from_edge:
+                score = e.cost + self.angle_score(i, from_dir) + e.get_node(self).angle_score(to_edge=e)
+                if score < min_score:
+                    out = [ e ]
+                    min_score = score
+                elif score == min_score:
+                    out.append(e)
+
+        return out
+
+    def angle_score(self, to_dir=-1, from_dir=-1, to_edge=None):
+        if from_dir == -1: from_dir = self.min_score_from
+        if to_edge: to_dir = self.edges.index(to_edge)
+        return 1000 if abs(from_dir - to_dir) % 2 == 1 else 0
+
 
 
 
@@ -35,8 +59,13 @@ class Edge:
     def get_node(self, node:Node):
         return self.node_a if node == self.node_b else self.node_b
 
+def vect_flip(v):
+    v.y *= -1
+    return v
 
-def advent_16_step_1():
+
+def advent_16():
+    timer = Stopwatch()
     with open('../resources/advent/16_input.txt') as list_file:
        maze = [ [ c for c in line ] for line in list_file.read().split("\n")]
 
@@ -51,6 +80,7 @@ def advent_16_step_1():
 
     def run_maze(node:Node):
         ret = []
+        ## STEP 1
         for free_direction in [ d for d in range(4) if not node.edges[d] ]:
             if (node.position + dirs[free_direction]).of_grid(maze) == '#':
                 continue
@@ -97,9 +127,7 @@ def advent_16_step_1():
 
         scan = ns
 
-    def vect_flip(v):
-        v.y *= -1
-        return v
+
 
     # # display the generated network
     # G = nx.Graph()
@@ -113,16 +141,23 @@ def advent_16_step_1():
     # find the optimal path
     visited = []
     unvisited = list(nodes.values())
+    finish_node = None
     while unvisited:
         active_node = min(unvisited, key=lambda n: n.min_score)
         if active_node.is_finish:
             print("result " + str(active_node.min_score))
-            break
+            finish_node = active_node
 
         active_node.score_edges()
         visited.append(active_node)
         unvisited.remove(active_node)
 
+    timer.stop_print(True)
+    ## START OF STEP 2
+
+    # now backtrack from the end node and list all edges which are in the optimal paths
+    # def backtrace(node):
+    #     for
 
 
-timed_run(advent_16_step_1)
+advent_16()
