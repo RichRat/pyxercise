@@ -1,5 +1,4 @@
-
-
+from util.grid_util import grid_walk_val
 from util.timing import timed_run, Stopwatch
 from util.vector import IntVector2 as Iv
 import networkx as nx
@@ -25,25 +24,33 @@ class Node:
         if score < self.min_score:
             self.min_score = score
             self.min_score_from = self.edges.index(edge)
-        elif score == self.min_score:
-            print("hot damn!")
+        # elif score == self.min_score:
+        #     print("hot damn!")
 
     def backtrace_edges(self, from_edge):
+        # if from_edge not in self.edges:
+        #     print("wtf!")
+
         out = []
-        min_score = 19000
-        from_dir = self.edges.index(from_edge)
+        min_path_score = 1900000
+        from_dir = self.edges.index(from_edge) if from_edge is not None else -2
         for i, e in enumerate(self.edges):
             if e is not None and e != from_edge:
-                score = e.cost + self.angle_score(i, from_dir) + e.get_node(self).angle_score(to_edge=e)
-                if score < min_score:
+                next_node = e.get_node(self)
+                if next_node.min_score >= self.min_score:
+                    continue
+
+                score = next_node.min_score + e.cost + self.angle_score(i, from_dir) + next_node.angle_score(to_edge=e)
+                if score < min_path_score:
                     out = [ e ]
-                    min_score = score
-                elif score == min_score:
+                    min_path_score = score
+                elif score == min_path_score:
                     out.append(e)
 
         return out
 
     def angle_score(self, to_dir=-1, from_dir=-1, to_edge=None):
+        if from_dir == -2: return 0
         if from_dir == -1: from_dir = self.min_score_from
         if to_edge: to_dir = self.edges.index(to_edge)
         return 1000 if abs(from_dir - to_dir) % 2 == 1 else 0
@@ -52,9 +59,10 @@ class Node:
 
 
 class Edge:
-    def __init__(self, node_a, node_b, cost):
+    def __init__(self, node_a, node_b, cost, trail):
         self.node_a, self.node_b = node_a, node_b
         self.cost = cost
+        self.trail = trail
 
     def get_node(self, node:Node):
         return self.node_a if node == self.node_b else self.node_b
@@ -88,8 +96,10 @@ def advent_16():
             position = node.position
             direction = free_direction
             edge_score = 0
+            trail = [ node.position ]
             while True:
                 position = position + dirs[direction]
+                trail.append(position)
                 edge_score += 1
                 pos_val = position.of_grid(maze)
                 d_list = [ (direction + d) % 4 for d in [-1, 0, 1] ]
@@ -110,7 +120,7 @@ def advent_16():
 
                     # g_nodes.append(n) # graphical debugging
 
-                e = Edge(node, n, edge_score)
+                e = Edge(node, n, edge_score, trail)
                 n.edges[(direction + 2) % 4] = e
                 node.edges[free_direction] = e
 
@@ -145,7 +155,7 @@ def advent_16():
     while unvisited:
         active_node = min(unvisited, key=lambda n: n.min_score)
         if active_node.is_finish:
-            print("result " + str(active_node.min_score))
+            print("result step 1 = " + str(active_node.min_score))
             finish_node = active_node
 
         active_node.score_edges()
@@ -156,8 +166,36 @@ def advent_16():
     ## START OF STEP 2
 
     # now backtrack from the end node and list all edges which are in the optimal paths
-    # def backtrace(node):
-    #     for
+    back_edges = []
+    back_checked_nodes = [ ]
+    def backtrace(node:Node, edge:Edge|None):
+        if (node, edge) in back_checked_nodes:
+            return
+
+        back_checked_nodes.append((node, edge))
+        edges = node.backtrace_edges(edge)
+        back_edges.extend([ e for e in edges if e not in back_edges ])
+        if start_node in [ e.get_node(node) for e in edges ]:
+            return
+
+        for e in edges:
+            backtrace(e.get_node(node), e)
+
+
+
+    backtrace(finish_node, None)
+
+
+    points = set([pos for e in back_edges for pos in e.trail])
+    print("result step 2 = " + str(len(points)))
+    timer.stop_print()
+
+
+    #draw result
+    maze_points = [p for p, v in grid_walk_val(maze) if v == "#"]
+    plt.scatter([p.x for p in maze_points], [-p.y for p in maze_points], color=["#BBBBBB"], s=2)
+    plt.scatter([p.x for p in points], [-p.y for p in points], color=["red"], s=3)
+    plt.show()
 
 
 advent_16()
