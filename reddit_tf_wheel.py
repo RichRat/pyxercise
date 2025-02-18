@@ -1,5 +1,4 @@
 import random
-import statistics
 
 from matplotlib import pyplot as plt
 
@@ -21,15 +20,17 @@ def test():
 
     return tickets
 
+# parameters
 tries = 100000
-results = [ test() for n in range(tries)]
+ticket_days = 14
 
+results = [ test() for n in range(tries)]
 out = [0] * (max(results) + 1)
 for res in results:
     out[res] += 1
 
-mean = statistics.mean(results)
-max_tickets = 20 * 3
+
+max_tickets = ticket_days * 3
 win_percentage = len([ r for r in results if r <= max_tickets ]) / tries * 100
 
 plt.title("wheel of pain " + str(tries) + (" tests, won all %.2f" % win_percentage) + " %")
