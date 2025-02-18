@@ -28,8 +28,13 @@ out = [0] * (max(results) + 1)
 for res in results:
     out[res] += 1
 
-plt.title("wheel of pain " + str(tries) + " tests, mean " + str(statistics.mean(results)))
-plt.ylabel("tests")
-plt.xlabel("daily tickets to win all - free tickets")
+mean = statistics.mean(results)
+max_tickets = 20 * 3
+win_percentage = len([ r for r in results if r <= max_tickets ]) / tries * 100
+
+plt.title("wheel of pain " + str(tries) + (" tests, won all %.2f" % win_percentage) + " %")
+plt.ylabel("successful runs")
+plt.xlabel("daily tickets used")
+plt.axvline(x=max_tickets, c="red")
 plt.plot(out)
 plt.show()
