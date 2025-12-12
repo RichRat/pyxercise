@@ -2,7 +2,7 @@ from util.timing import timed_run
 
 
 def advent_01():
-    with open('../resources/advent/1_lists.txt') as list_file:
+    with open('../resources/adv25/1_lists.txt') as list_file:
         rows = [char.split(" ") for char in list_file.read().split('\n')]
 
     a = []
