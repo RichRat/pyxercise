@@ -156,10 +156,10 @@ def euler59():
 
 
 
-    with open('resources/euler/1000-most-common-words.txt') as word_file:
+    with open('../resources/euler/1000-most-common-words.txt') as word_file:
         words = [char for char in word_file.read().split('\n')]
 
-    with open('resources/euler/0059_cipher.txt', 'r') as secret_file:
+    with open('../resources/euler/0059_cipher.txt', 'r') as secret_file:
         data = [ int(char) for char in secret_file.read().split(',')]
 
     def decrypt(key):
@@ -498,7 +498,7 @@ def euler71():
 
 def euler81():
 
-    with open('resources/euler/0081_matrix.txt') as matrix_file:
+    with open('../resources/euler/0081_matrix.txt') as matrix_file:
         lines = [char for char in matrix_file.read().split('\n')]
 
     matrix = []
@@ -518,7 +518,7 @@ def euler81():
 
 def euler82():
 
-    with open('resources/euler/0082_matrix.txt', 'r') as f:
+    with open('../resources/euler/0082_matrix.txt', 'r') as f:
         matrix = [[ int(c) for c in line.split(',') ] for line in f]
 
     size = len(matrix)
@@ -545,7 +545,7 @@ def euler82():
     print("result " + str(min([ row[-1] for row in nav_cost_matrix ])))
 
 def euler83():
-    with open('resources/euler/0082_matrix.txt', 'r') as f:
+    with open('../resources/euler/0082_matrix.txt', 'r') as f:
         matrix = [[ int(c) for c in line.split(',') ] for line in f]
 
 

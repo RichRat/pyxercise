@@ -1,20 +1,6 @@
 from util.advent import AocUtil
 from util.grid_util import grid_walk_val, grid_neighbors, grid_walk
 from util.timing import timed_run
-from util.vector import IntVector2
-
-iv = IntVector2
-
-dirs = [
-    iv(1, 0),
-    iv(1, 1),
-    iv(0, 1),
-    iv(-1, 1),
-    iv(-1, 0),
-    iv(-1, -1),
-    iv(0, -1),
-    iv(1, -1),
-]
 
 def advent_04p1():
     grid = AocUtil().load_aoc_25(4)

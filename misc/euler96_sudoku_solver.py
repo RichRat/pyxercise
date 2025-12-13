@@ -163,7 +163,7 @@ class Grid:
 
 
 start_time = time.time()
-with open("resources/euler/p096_sudoku.txt") as file:
+with open("../resources/euler/p096_sudoku.txt") as file:
     lines = [line.rstrip() for line in file]
 
 grids = []
