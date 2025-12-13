@@ -14,6 +14,7 @@ def advent_05p1():
         for rng in ranges:
             if rng[0] <= n <= rng[1]:
                 res += 1
+                break
 
     print("result " + str(res))
 
