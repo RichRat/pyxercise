@@ -1,7 +1,4 @@
-from asyncio.windows_events import NULL
-
 from util.advent import AocUtil
-from util.grid_util import grid_walk_val, grid_neighbors, grid_walk
 from util.timing import timed_run
 
 
@@ -40,8 +37,8 @@ def load_input():
         (value, is_start)
         for row in rows if '-' in row
         for value, is_start in (
-            (int(row.split('-')[0]), 1),
-            (int(row.split('-')[1]), -1)
+            (int(row.split('-')[0]), 1), # start id
+            (int(row.split('-')[1]), -1) # end id
         )
     ]
 
