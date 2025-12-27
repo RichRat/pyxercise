@@ -1,10 +1,7 @@
-from util.timing import timed_run
+from util.timing import timed_run, timed_run_preload_aoc
 
 
-def advent_01():
-    with open('../../resources/adv25/01_inp.txt') as list_file:
-        rows = [char for char in list_file.read().split('\n') if char != ""]
-
+def advent_01(rows):
 
     res = 0
     pos = 50
@@ -19,13 +16,10 @@ def advent_01():
 
     print("result " + str(res))
 
-timed_run(advent_01)
 
 
-def advent_01_2():
-    with open('../../resources/adv25/01_inp.txt') as list_file:
-        rows = [char for char in list_file.read().split('\n')]
 
+def advent_01_2(rows):
 
     res = 0
     pos = 50
@@ -42,4 +36,5 @@ def advent_01_2():
 
     print("result " + str(res))
 
-timed_run(advent_01_2)
+timed_run_preload_aoc(advent_01(), 25, 1)
+timed_run_preload_aoc(advent_01_2(), 25, 1)

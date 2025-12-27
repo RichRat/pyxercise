@@ -1,10 +1,9 @@
 from util.advent import AocUtil
 from util.grid_util import grid_walk_val, grid_neighbors, grid_walk
-from util.timing import timed_run
+from util.timing import timed_run, timed_run_preload_aoc
 
-def advent_04p1():
-    grid = AocUtil().load_aoc_25(4)
 
+def advent_04p1(grid):
     res = 0
 
     for pos, val in grid_walk_val(grid):
@@ -24,11 +23,8 @@ def advent_04p1():
     print("result " + str(res))
 
 
-timed_run(advent_04p1)
 
-
-def advent_04p2():
-    grid = AocUtil().load_aoc_25(4)
+def advent_04p2(grid):
 
     res = 0
     removed = [ -1 ]
@@ -77,4 +73,5 @@ def remove_rolls(grid, reduced=None):
     return ret
 
 
-timed_run(advent_04p2)
+timed_run_preload_aoc(advent_04p1, 25, 4)
+timed_run_preload_aoc(advent_04p2, 25, 4)

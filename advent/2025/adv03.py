@@ -1,4 +1,4 @@
-from util.timing import timed_run
+from util.timing import timed_run, timed_run_preload_aoc
 
 
 def advent_03p1():
@@ -17,7 +17,6 @@ def advent_03p1():
         res += maxval
     print("result " + str(res))
 
-timed_run(advent_03p1)
 
 
 
@@ -42,4 +41,5 @@ def gen_num(bank, numlen, val):
     return gen_num(bank[first+1:], numlen - 1, val * 10 + max_digit)
 
 
-timed_run(advent_03p2)
+timed_run_preload_aoc(advent_03p1, 25, 3)
+timed_run_preload_aoc(advent_03p2, 25, 3)

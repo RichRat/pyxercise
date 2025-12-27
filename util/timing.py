@@ -1,9 +1,17 @@
 import time
 
+from util.advent import AocUtil
 
-def timed_run(foo):
+
+def timed_run(foo, n):
     sw = Stopwatch()
     foo()
+    sw.stop_print()
+
+def timed_run_preload_aoc(foo, year, task, delim='\n'):
+    rows = AocUtil(delim).load_aoc_file(year, task)
+    sw = Stopwatch()
+    foo(rows)
     sw.stop_print()
 
 

@@ -1,8 +1,8 @@
 from util.advent import AocUtil
-from util.timing import timed_run
+from util.timing import timed_run, timed_run_preload_aoc
 
-def advent_07p1():
-    rows = AocUtil().load_aoc_25(7)
+
+def advent_07p1(rows):
     res = 0
 
     start = rows[0].index('S')
@@ -27,9 +27,7 @@ def advent_07p1():
     print("result " + str(res))
 
 
-def advent_07p2():
-    rows = AocUtil().load_aoc_25(7)
-
+def advent_07p2(rows):
     start = rows[0].index('S')
     paths = [ 0 ] * len(rows[0])
     paths[start] = 1
@@ -50,5 +48,5 @@ def advent_07p2():
     print("result " + str(sum(paths)))
 
 
-timed_run(advent_07p1)
-timed_run(advent_07p2)
+timed_run_preload_aoc(advent_07p1, 25, 7)
+timed_run_preload_aoc(advent_07p2, 25, 7)

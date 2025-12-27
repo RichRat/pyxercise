@@ -1,3 +1,5 @@
+import math
+
 from util.math_util import greatest_common_divisor
 
 # integer vector class for handling vectors pointing to position in a 2d list
@@ -33,6 +35,11 @@ class IntVector2:
     def __mod__(self, mod_vect):
         return  IntVector2(self.x % mod_vect.x, self.y % mod_vect.y)
 
+
+    def floor_divide(self, val):
+        return IntVector2(self.x // val, self.y // val)
+
+
     def of_grid(self, grid):
         return grid[self.y][self.x]
 
@@ -54,6 +61,9 @@ class IntVector2:
 
     def to_tuple(self):
         return self.x, self.y
+
+    def abs(self):
+        return IntVector2(abs(self.x), abs(self.y))
 
 
 def to_vect_list(tuples: list[(int, int)]):

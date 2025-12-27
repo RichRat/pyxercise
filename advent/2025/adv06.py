@@ -1,9 +1,8 @@
 from util.advent import AocUtil
-from util.timing import timed_run
+from util.timing import timed_run, timed_run_preload_aoc
 
-def advent_06p1():
-    rows = AocUtil().load_aoc_25(6)
 
+def advent_06p1(rows):
     numgrid = [ [ int(sub) for sub in char.split()] for char in rows[:-1]]
     ops = [ sub for sub in rows[-1].split()]
 
@@ -21,8 +20,7 @@ def advent_06p1():
     print("result " + str(res))
 
 
-def advent_06p2():
-    rows = AocUtil().load_aoc_25(6)
+def advent_06p2(rows):
 
     # fix line widths
     rows = [ row.ljust(max([ len(row) for row in rows ])) for row in rows ]
@@ -52,5 +50,5 @@ def advent_06p2():
     print("result " + str(res))
 
 
-timed_run(advent_06p1)
-timed_run(advent_06p2)
+timed_run_preload_aoc(advent_06p1, 25, 6)
+timed_run_preload_aoc(advent_06p2, 25, 6)

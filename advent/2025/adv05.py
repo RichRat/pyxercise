@@ -1,10 +1,9 @@
 from util.advent import AocUtil
-from util.timing import timed_run
+from util.timing import timed_run, timed_run_preload_aoc
 
 
-
-def advent_05p1():
-    range_line, ids = load_input()
+def advent_05p1(rows):
+    range_line, ids = load_input(rows)
     ranges = gen_ranges(range_line)
     res = 0
     for n in ids:
@@ -30,8 +29,7 @@ def gen_ranges(range_line):
 
     return ret
 
-def load_input():
-    rows = AocUtil().load_aoc_25(5)
+def load_input(rows):
     ids = [int(row) for row in rows if '-' not in row]
     range_line = [
         (value, is_start)
@@ -45,11 +43,8 @@ def load_input():
     return range_line, ids
 
 
-timed_run(advent_05p1)
-
-
-def advent_05p2():
-    range_line, _ = load_input()
+def advent_05p2(rows):
+    range_line, _ = load_input(rows)
     ranges = gen_ranges(range_line)
     res = 0
 
@@ -59,4 +54,6 @@ def advent_05p2():
     print("result " + str(res))
 
 
-timed_run(advent_05p2)
+timed_run_preload_aoc(advent_05p1, 25, 5)
+timed_run_preload_aoc(advent_05p2, 25, 5)
+
