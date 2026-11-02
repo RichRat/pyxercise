@@ -61,26 +61,28 @@ def run_test(gt_func):
 
 
 # parameters
-tries = 1000
+tries = 10000
 ticket_days = 14
 
-a = run_test(gt_use_now)
-b = run_test(gt_use_after_daily)
-c = run_test(gt_use_for_cleanup)
+r_use_now = run_test(gt_use_now)
+r_after_daily = run_test(gt_use_after_daily)
+r_cleanup = run_test(gt_use_for_cleanup)
 
 
 max_tickets = ticket_days * 3
-#win_percentage = len([ r for r in results if r <= max_tickets ]) / tries * 100
 
 plt.title("wheel of ok " + str(tries) + " * 3 tries")
 plt.ylabel("successful runs")
 plt.xlabel("daily tickets used")
-plt.axvline(x=max_tickets, c="red")
-plt.plot(a, "green", label="use immediately")
-plt.plot(b, "blue", label="use daily")
-plt.plot(c, "orange", label="save for cleanup")
+plt.xticks(range(max_tickets))
+
+plt.plot(r_use_now, "green", label="use immediately")
+plt.plot(r_after_daily, "blue", label="use daily")
+plt.plot(r_cleanup, "orange", label="save for cleanup")
 plt.legend()
+
 ax = plt.gca()
-ax.set_xlim((20, max_tickets + 4))
-#plt.savefig("wheel_of_ok.png")
+ax.set_xlim((20, max_tickets))
+ax.set_ylim((0, max(r_use_now + r_after_daily + r_cleanup) + 100))
+
 plt.show()
