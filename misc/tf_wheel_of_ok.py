@@ -6,7 +6,7 @@ item = 1
 empty = 0
 golden_ticket = 2
 
-def test(gd_func):
+def test(gt_func):
     wheel = [ item ] * 20
     tickets_used = 0
     gt_count = 0
@@ -20,16 +20,17 @@ def test(gd_func):
         else: #golden ticket
             gt_count += 1
             wheel[spin_res] = empty
-            gt_count = gd_func(wheel, gt_count, tickets_used)
+
+        gt_count = gt_func(wheel, gt_count, tickets_used)
 
     return tickets_used
 
 def gt_use_now(wheel, gt_count, tickets_used):
-    for i in range(len(wheel)):
-        if wheel[i] == item:
-            wheel[i] = empty
-            break
-
+    if gt_count > 0:
+        for i in range(len(wheel)):
+            if wheel[i] == item:
+                wheel[i] = empty
+                break
     return 0
 
 def gt_use_after_daily(wheel, gt_count, tickets_used):
@@ -45,8 +46,9 @@ def gt_use_for_cleanup(wheel, gt_count, tickets_used):
     if gt_count >= len([ n for n in wheel if n == item ]):
         for i in range(len(wheel)):
             wheel[i] = empty
+            gt_count -= 1
 
-    return 0
+    return gt_count
 
 
 def run_test(gt_func):
@@ -74,7 +76,11 @@ plt.title("wheel of ok " + str(tries) + " * 3 tries")
 plt.ylabel("successful runs")
 plt.xlabel("daily tickets used")
 plt.axvline(x=max_tickets, c="red")
-plt.plot(a, "green")
-plt.plot(b, "blue")
-plt.plot(c, "orange")
+plt.plot(a, "green", label="use immediately")
+plt.plot(b, "blue", label="use daily")
+plt.plot(c, "orange", label="save for cleanup")
+plt.legend()
+ax = plt.gca()
+ax.set_xlim((20, max_tickets + 4))
+#plt.savefig("wheel_of_ok.png")
 plt.show()
