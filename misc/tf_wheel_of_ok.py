@@ -2,8 +2,6 @@ import random
 
 from matplotlib import pyplot as plt
 
-from util.math_util import all_equal
-
 item = 1
 empty = 0
 golden_ticket = 2
@@ -52,12 +50,12 @@ def gt_use_for_cleanup(wheel, gt_count, tickets_used):
 
 
 def run_test(gt_func):
-    results = [test(gt_use_now) for n in range(tries)]
+    results = [test(gt_func) for n in range(tries)]
     out = [0] * (max(results) + 1)
     for res in results:
         out[res] += 1
 
-    return out;
+    return out
 
 
 # parameters
