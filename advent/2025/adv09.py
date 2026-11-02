@@ -21,64 +21,60 @@ def area(p1, p2):
 
 
 hash_divisor = 5000
-
+# TODO optimization resulted in a wrong answer, fix!
 def advent_09p2(rows):
     res = 0
+
+    min_size_cutoff = 50000
+
     points = [ IntVector2(*[ int(sub) for sub in s.split(',')]) for s in rows ]
     area_ref = set()
     for p1 in points:
-        val = [gen_ref_obj(area(p1, p2), p1, p2) for p2 in points if p1 != p2]
+        val = [gen_ref_obj(area(p1, p2), p1, p2) for p2 in points if p1 != p2 and area(p1, p2) > min_size_cutoff ]
         area_ref |= set(val)
 
-    perimeter = []
-    prev_point = points[-1]
-    for p in points:
-        dir = (p - prev_point).normalize()
-        pos = prev_point + dir
-        while pos != p:
-            perimeter.append(pos)
-            pos += dir
 
-        prev_point = p
+    vertical_lines = sorted([
+        (points[i-1], points[i]) for i in range(len(points)) if points[i-1].y == points[i].y
+    ], key=lambda t: t[0].y)
 
-    hash_ref = {}
-    for p in points + perimeter:
-        key = p.floor_divide(hash_divisor)
-        if key not in hash_ref:
-            hash_ref[key] = [ p ]
-        else:
-            hash_ref[key].append(p)
+    horiz_lines = sorted([
+        (points[i - 1], points[i]) for i in range(len(points)) if points[i - 1].x == points[i].x
+    ], key=lambda t: t[0].x)
+
 
 
     check_list = sorted(list(area_ref), key=arr_first, reverse=True)
     for a, p1, p2 in check_list:
 
-        if not(points_within(p1, p2, hash_ref)):
+        if not(points_within(p1, p2, horiz_lines, vertical_lines)):
             res = a
             break
 
     print("result " + str(res))
 
-def points_within(p1, p2, hash_ref):
-    x1 = min(p1.x, p2.x)//hash_divisor
-    x2 = max(p1.x, p2.x)//hash_divisor
-    y1 = min(p1.y, p2.y)//hash_divisor
-    y2 = max(p1.y, p2.y)//hash_divisor #fix this, good for loop bad for compare
+def points_within(p1, p2, horiz, vert):
+    x1 = min(p1.x, p2.x)
+    x2 = max(p1.x, p2.x)
+    y1 = min(p1.y, p2.y)
+    y2 = max(p1.y, p2.y)
 
-    #check within if possible:s
-    for y in range(x1 + 1, x2):
-        for x in range(y1 + 1, y2):
-            if IntVector2(x,y) in hash_ref:
-                return True
+    # check for intersection with horizontal lines
+    for lp1, lp2 in horiz:
+        if not y1 < lp1.y < y2: continue
+        
+        # span across                     point1 within         point2 within
+        if (lp1.x <= x1 and lp2.x >= x2) or x1 < lp1.x < x2 or x1 < lp2.x < x2:
+            return True
 
-    for y in range(y1, y2 + 1):
-        for x in range(x1, x2 + 1):
-            if not(x in [x1, x2] or y in[ y2, y1 ]):
-                continue
+    # check for intersection with vertical lines
+    for lp1, lp2 in vert:
+        if not x1 < lp1.x < x2: continue
 
-            key = IntVector2(x, y)
-            if key in hash_ref and any([p for p in hash_ref[key] if x1 < p.x < x2 and y1 < p.y < y2]):
-                return True
+        # span across                     point1 within         point2 within
+        if (lp1.y <= y1 and lp2.y >= y2) or y1 < lp1.y < y2 or y1 < lp2.y < y2:
+            return True
+            
 
     return False
 

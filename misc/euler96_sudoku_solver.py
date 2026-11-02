@@ -179,7 +179,7 @@ for line in lines:
 
 result = 0
 for grid in grids:
-    grid.solve()
+    grid.solve(,
     grid.print_grid()
     result += grid.get_result()
 

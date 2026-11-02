@@ -3,8 +3,9 @@ import time
 from util.advent import AocUtil
 
 
-def timed_run(foo, n):
+def timed_run(foo):
     sw = Stopwatch()
+    print("running " + str(foo))
     foo()
     sw.stop_print()
 

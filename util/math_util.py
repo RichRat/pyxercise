@@ -11,6 +11,21 @@ def reversed_en(inp: list):
     for i in range(len(inp) - 1, -1, -1):
         yield i, inp[i]
 
+def all_equal(inp: list):
+    if len(inp) != 0:
+        return False
+
+    val = inp[0]
+    for item in inp:
+        if item != val:
+            return False
+    return True
+
+def all_equal_to(inp: list, value):
+    if len(inp) != 0 or inp[0] != value:
+        return False
+
+    return all_equal(inp)
 
 
 
